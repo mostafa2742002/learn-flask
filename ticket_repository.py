@@ -1,83 +1,105 @@
-import json
-from pathlib import Path
-
+from database import get_connection
 from ticket_model import Ticket
 from ticket_status import TicketStatus
 
 
-DATA_FILE = Path("tickets.json")
-
-
-def ticket_to_dict(ticket):
-    return {
-        "id": ticket.id,
-        "title": ticket.title,
-        "status": ticket.status.value,
-        "description": ticket.description
-    }
-
-
-def dict_to_ticket(data):
+def row_to_ticket(row):
     return Ticket(
-        id=data["id"],
-        title=data["title"],
-        status=TicketStatus(data["status"]),
-        description=data["description"]
+        id=row["id"],
+        title=row["title"],
+        status=TicketStatus(row["status"]),
+        description=row["description"]
     )
 
 
-def load_tickets():
-    if not DATA_FILE.exists():
-        return [
-            Ticket(1, "Login problem", TicketStatus.OPEN, "User cannot login to the system."),
-            Ticket(2, "Payment failed", TicketStatus.IN_PROGRESS, "Payment was rejected by the bank."),
-            Ticket(3, "Account locked", TicketStatus.RESOLVED, "Account was locked after many failed attempts.")
-        ]
-
-    with open(DATA_FILE, "r") as file:
-        data = json.load(file)
-
-    return [dict_to_ticket(item) for item in data]
-
-
-tickets = load_tickets()
-
-def save_all():
-    with open(DATA_FILE, "w") as file:
-        json.dump([ticket_to_dict(ticket) for ticket in tickets], file, indent=4)
-
-
 def find_all():
-    return tickets
+    connection = get_connection()
+
+    rows = connection.execute(
+        "SELECT * FROM tickets ORDER BY id DESC"
+    ).fetchall()
+
+    connection.close()
+
+    return [row_to_ticket(row) for row in rows]
 
 
 def find_by_id(ticket_id):
-    for ticket in tickets:
-        if ticket.id == ticket_id:
-            return ticket
+    connection = get_connection()
 
-    return None
+    row = connection.execute(
+        "SELECT * FROM tickets WHERE id = ?",
+        (ticket_id,)
+    ).fetchone()
+
+    connection.close()
+
+    if row is None:
+        return None
+
+    return row_to_ticket(row)
 
 
 def save(ticket):
-    tickets.append(ticket)
-    save_all()
+    connection = get_connection()
+
+    cursor = connection.execute(
+        """
+        INSERT INTO tickets (title, status, description)
+        VALUES (?, ?, ?)
+        """,
+        (ticket.title, ticket.status.value, ticket.description)
+    )
+
+    connection.commit()
+
+    ticket.id = cursor.lastrowid
+
+    connection.close()
+
+    return ticket
+
+
+def update(ticket):
+    connection = get_connection()
+
+    connection.execute(
+        """
+        UPDATE tickets
+        SET title = ?, status = ?, description = ?
+        WHERE id = ?
+        """,
+        (ticket.title, ticket.status.value, ticket.description, ticket.id)
+    )
+
+    connection.commit()
+    connection.close()
+
     return ticket
 
 
 def delete_by_id(ticket_id):
-    ticket = find_by_id(ticket_id)
+    connection = get_connection()
 
-    if ticket is None:
-        return False
+    cursor = connection.execute(
+        "DELETE FROM tickets WHERE id = ?",
+        (ticket_id,)
+    )
 
-    tickets.remove(ticket)
-    save_all()
-    return True
+    connection.commit()
+    connection.close()
+
+    return cursor.rowcount > 0 # Returns True if a row was deleted, False otherwise
 
 
-def get_next_id():
-    if len(tickets) == 0:
-        return 1
+def find_by_status(status):
+    connection = get_connection()
 
-    return max(ticket.id for ticket in tickets) + 1
+    rows = connection.execute(
+        "SELECT * FROM tickets WHERE status = ? ORDER BY id DESC",
+        (status,)
+    ).fetchall()
+
+    connection.close()
+
+    return [row_to_ticket(row) for row in rows]

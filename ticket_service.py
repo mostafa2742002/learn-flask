@@ -1,5 +1,5 @@
 from ticket_model import Ticket
-from ticket_repository import delete_by_id, find_all, find_by_id, save, get_next_id, save_all
+from ticket_repository import find_all, find_by_id, find_by_status, save, update, delete_by_id
 from ticket_status import TicketStatus
 
 def get_all_tickets():
@@ -12,7 +12,7 @@ def get_ticket_by_id(ticket_id):
 
 def add_ticket(title, description):
     new_ticket = Ticket(
-        id=get_next_id(),
+        id=None,
         title=title,
         status=TicketStatus.OPEN,
         description=description
@@ -31,7 +31,7 @@ def resolve_ticket(ticket_id):
     if not resolved:
         return ticket, "Only in-progress tickets can be resolved"
 
-    save_all()
+    update(ticket)
 
     return ticket, "Ticket resolved successfully"
 
@@ -46,7 +46,7 @@ def start_progress_ticket(ticket_id):
     if not started:
         return ticket, "Only open tickets can be moved to in progress"
 
-    save_all()
+    update(ticket)
 
     return ticket, "Ticket moved to in progress"
 
@@ -66,7 +66,7 @@ def update_ticket(ticket_id, title, description):
     ticket.title = title
     ticket.description = description
 
-    save_all()
+    update(ticket)
 
     return ticket, "Ticket updated successfully"
 
@@ -78,3 +78,10 @@ def delete_ticket(ticket_id):
         return "Ticket not found"
 
     return "Ticket deleted successfully"
+
+
+def get_tickets_by_status(status):
+    if status is None or status.strip() == "":
+        return find_all()
+
+    return find_by_status(status)

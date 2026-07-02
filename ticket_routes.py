@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from ticket_service import delete_ticket, get_all_tickets, get_ticket_by_id, add_ticket, resolve_ticket, start_progress_ticket, update_ticket
+from ticket_service import delete_ticket, get_all_tickets, get_ticket_by_id, add_ticket, resolve_ticket, start_progress_ticket, update_ticket,get_tickets_by_status
 
 ticket_bp = Blueprint("tickets", __name__)
 
@@ -7,8 +7,11 @@ ticket_bp = Blueprint("tickets", __name__)
 @ticket_bp.route("/")
 def home():
     user_name = "Mostafa"
-    return render_template("home.html", name=user_name, tickets=get_all_tickets())
+    status = request.args.get("status")
 
+    tickets = get_tickets_by_status(status)
+
+    return render_template("home.html", name=user_name, tickets=tickets, selected_status=status)
 
 @ticket_bp.route("/tickets/<int:ticket_id>")
 def ticket_details(ticket_id):
