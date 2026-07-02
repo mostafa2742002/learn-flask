@@ -7,8 +7,15 @@
 {% if ticket %}
     <h1>{{ ticket.title }}</h1>
 
-    <p>Status: {{ ticket.status }}</p>
+    <p>Status: {{ ticket.status.value }}</p>
     <p>Description: {{ ticket.description }}</p>
+
+    {% if ticket.status.value != "RESOLVED" %}
+    <form action="{{ url_for('tickets.resolve_ticket_route', ticket_id=ticket.id) }}" method="post">
+        <button type="submit">Resolve Ticket</button>
+    </form>
+    {% endif %}
+
 {% else %}
     <h1>Ticket not found</h1>
 {% endif %}

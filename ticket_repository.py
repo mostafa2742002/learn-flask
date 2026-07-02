@@ -1,26 +1,26 @@
 from ticket_model import Ticket
+from ticket_status import TicketStatus
 
 tickets = [
     Ticket(
         id=1,
         title="Login problem",
-        status="OPEN",
+        status=TicketStatus.OPEN,
         description="User cannot login to the system."
     ),
     Ticket(
         id=2,
         title="Payment failed",
-        status="IN_PROGRESS",
+        status=TicketStatus.IN_PROGRESS,
         description="Payment was rejected by the bank."
     ),
     Ticket(
         id=3,
         title="Account locked",
-        status="RESOLVED",
+        status=TicketStatus.RESOLVED,
         description="Account was locked after many failed attempts."
     )
 ]
-
 
 def find_all():
     return tickets

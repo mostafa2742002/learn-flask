@@ -1,6 +1,6 @@
 from ticket_model import Ticket
 from ticket_repository import find_all, find_by_id, save, get_next_id
-
+from ticket_status import TicketStatus
 
 def get_all_tickets():
     return find_all()
@@ -14,7 +14,7 @@ def add_ticket(title, description):
     new_ticket = Ticket(
         id=get_next_id(),
         title=title,
-        status="OPEN",
+        status=TicketStatus.OPEN,
         description=description
     )
 
@@ -26,6 +26,6 @@ def resolve_ticket(ticket_id):
     if ticket is None:
         return None
 
-    ticket.status = "RESOLVED"
+    ticket.resolve()
 
     return ticket
