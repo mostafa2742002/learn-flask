@@ -9,6 +9,15 @@
 
     <p>Status: {{ ticket.status.value }}</p>
     <p>Description: {{ ticket.description }}</p>
+    <p>
+        <a href="{{ url_for('tickets.edit_ticket_form', ticket_id=ticket.id) }}">
+            Edit Ticket
+        </a>
+    </p>
+
+    <form action="{{ url_for('tickets.delete_ticket_route', ticket_id=ticket.id) }}" method="post">
+        <button type="submit">Delete Ticket</button>
+    </form>
 
     {% if ticket.status.value == "OPEN" %}
         <form action="{{ url_for('tickets.start_progress_ticket_route', ticket_id=ticket.id) }}" method="post">

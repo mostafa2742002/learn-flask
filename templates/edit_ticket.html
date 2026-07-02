@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Ticket{% endblock %}
+
+{% block content %}
+
+<h1>Edit Ticket</h1>
+
+<form action="{{ url_for('tickets.update_ticket_route', ticket_id=ticket.id) }}" method="post">
+    <input type="text" name="title" value="{{ ticket.title }}">
+
+    <br><br>
+
+    <textarea name="description">{{ ticket.description }}</textarea>
+
+    <br><br>
+
+    <button type="submit">Save Changes</button>
+</form>
+
+{% endblock %}

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from ticket_service import get_all_tickets, get_ticket_by_id, add_ticket, resolve_ticket, start_progress_ticket
+from ticket_service import delete_ticket, get_all_tickets, get_ticket_by_id, add_ticket, resolve_ticket, start_progress_ticket, update_ticket
 
 ticket_bp = Blueprint("tickets", __name__)
 
@@ -61,3 +61,39 @@ def start_progress_ticket_route(ticket_id):
         return redirect(url_for("tickets.home"))
 
     return redirect(url_for("tickets.ticket_details", ticket_id=ticket_id))
+
+@ticket_bp.route("/tickets/<int:ticket_id>/edit")
+def edit_ticket_form(ticket_id):
+    ticket = get_ticket_by_id(ticket_id)
+
+    if ticket is None:
+        flash("Ticket not found")
+        return redirect(url_for("tickets.home"))
+
+    return render_template("edit_ticket.html", ticket=ticket)
+
+@ticket_bp.route("/tickets/<int:ticket_id>/edit", methods=["POST"])
+def update_ticket_route(ticket_id):
+    title = request.form["title"]
+    description = request.form["description"]
+
+    ticket, message = update_ticket(ticket_id, title, description)
+
+    flash(message)
+
+    if ticket is None:
+        return redirect(url_for("tickets.home"))
+
+    if message != "Ticket updated successfully":
+        return render_template("edit_ticket.html", ticket=ticket)
+
+    return redirect(url_for("tickets.ticket_details", ticket_id=ticket_id))
+
+
+@ticket_bp.route("/tickets/<int:ticket_id>/delete", methods=["POST"])
+def delete_ticket_route(ticket_id):
+    message = delete_ticket(ticket_id)
+
+    flash(message)
+
+    return redirect(url_for("tickets.home"))
