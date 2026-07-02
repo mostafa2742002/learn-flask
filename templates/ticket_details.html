@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    {% if ticket %}
+        <h1>{{ ticket.title }}</h1>
+
+        <p>Status: {{ ticket.status }}</p>
+        <p>Description: {{ ticket.description }}</p>
+    {% else %}
+        <h1>Ticket not found</h1>
+    {% endif %}
+
+    <a href="/">Back to Home</a>
+
+</body>
+</html>
