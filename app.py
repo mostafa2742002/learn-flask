@@ -43,20 +43,40 @@ def ticket_detail(ticket_id):
     return render_template('ticket_details.html', ticket=selcted_ticket)
 
 
-@app.route('/tickets', methods=['POST'])
+@app.route('/tickets/new')
+def new_ticket():
+    return render_template('new_ticket.html')
+
+
+
+
+@app.route("/tickets", methods=["POST"])
 def create_ticket():
-    title = request.form['title']
-    description = request.form['description']
+    title = request.form["title"]
+    description = request.form["description"]
+
+    if title.strip() == "":
+        return render_template(
+            "new_ticket.html",
+            error="Title is required"
+        )
+
+    if description.strip() == "":
+        return render_template(
+            "new_ticket.html",
+            error="Description is required"
+        )
 
     new_ticket = {
-        'id': len(tickets) + 1,
-        'title': title,
-        'description': description
+        "id": len(tickets) + 1,
+        "title": title,
+        "status": "OPEN",
+        "description": description
     }
 
     tickets.append(new_ticket)
 
-    return redirect('/')
+    return redirect("/")
 
 if __name__ == '__main__':
     app.run(debug=True)
