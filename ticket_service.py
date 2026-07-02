@@ -1,5 +1,5 @@
 from ticket_model import Ticket
-from ticket_repository import find_all, find_by_id, find_by_status, save, update, delete_by_id
+from ticket_repository import find_all, find_by_id, find_by_status, save, search_by_keyword, update, delete_by_id
 from ticket_status import TicketStatus
 
 def get_all_tickets():
@@ -85,3 +85,9 @@ def get_tickets_by_status(status):
         return find_all()
 
     return find_by_status(status)
+
+def search_tickets(keyword):
+    if keyword is None or keyword.strip() == "":
+        return find_all()
+
+    return search_by_keyword(keyword.strip())

@@ -103,3 +103,20 @@ def find_by_status(status):
     connection.close()
 
     return [row_to_ticket(row) for row in rows]
+
+
+def search_by_keyword(keyword):
+    connection = get_connection()
+
+    rows = connection.execute(
+        """
+        SELECT * FROM tickets
+        WHERE title LIKE ? OR description LIKE ?
+        ORDER BY id DESC
+        """,
+        (f"%{keyword}%", f"%{keyword}%")
+    ).fetchall()
+
+    connection.close()
+
+    return [row_to_ticket(row) for row in rows]
