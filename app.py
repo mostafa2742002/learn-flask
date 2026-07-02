@@ -31,7 +31,7 @@ def home():
     return render_template('home.html', name=user_name, tickets=tickets)
 
 @app.route('/tickets/<int:ticket_id>')
-def ticket_detail(ticket_id):
+def ticket_details(ticket_id):
 
     selcted_ticket = None
 
@@ -44,7 +44,7 @@ def ticket_detail(ticket_id):
 
 
 @app.route('/tickets/new')
-def new_ticket():
+def show_create_ticket_form():
     return render_template('new_ticket.html')
 
 

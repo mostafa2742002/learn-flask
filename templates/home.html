@@ -1,28 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Flask App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <h1>Hello {{name}}</h1>
-    <p>This page is served by Flask.</p>
+{% extends "base.html" %}
 
-    <h2>Create Ticket</h2>
+{% block title %}Home{% endblock %}
 
-    <a href="{{url_for('new_ticket')}}">Create New Ticket</a>
+{% block content %}
 
-    <h2>tickets :</h2>
+<h1>Hello, {{ name }}</h1>
+<p>This data came from Flask.</p>
 
-    <ul>
-        {% for ticket in tickets %}
-            <li>
-                #{{ ticket.id }} - {{ ticket.title }} - {{ ticket.description }}
-                <a href="{{url_for('ticket_detail',ticket_id=ticket.id)}}">View Details</a>
-            </li>
-        {% endfor %}
-    </ul>
+<h2>Tickets</h2>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html>
+<ul>
+    {% for ticket in tickets %}
+        <li>
+            #{{ ticket.id }} - {{ ticket.title }} - {{ ticket.status }}
+
+            <a href="{{ url_for('ticket_details', ticket_id=ticket.id) }}">View Details</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
