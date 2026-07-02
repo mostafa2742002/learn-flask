@@ -117,6 +117,32 @@ def search_by_keyword(keyword):
         (f"%{keyword}%", f"%{keyword}%")
     ).fetchall()
 
+    # we use % to allow for partial matches in the search
+
+    connection.close()
+
+    return [row_to_ticket(row) for row in rows]
+
+
+def find_by_filters(status, keyword):
+    connection = get_connection()
+
+    sql = "SELECT * FROM tickets WHERE 1=1"
+    params = []
+
+    if status:
+        sql += " AND status = ?"
+        params.append(status)
+
+    if keyword:
+        sql += " AND (title LIKE ? OR description LIKE ?)"
+        params.append(f"%{keyword}%")
+        params.append(f"%{keyword}%")
+
+    sql += " ORDER BY id DESC"
+
+    rows = connection.execute(sql, params).fetchall()
+
     connection.close()
 
     return [row_to_ticket(row) for row in rows]
