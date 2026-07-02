@@ -10,7 +10,7 @@
 
     <h2>Create Ticket</h2>
 
-    <a href="/tickets/new">Create New Ticket</a>
+    <a href="{{url_for('new_ticket')}}">Create New Ticket</a>
 
     <h2>tickets :</h2>
 
@@ -18,7 +18,7 @@
         {% for ticket in tickets %}
             <li>
                 #{{ ticket.id }} - {{ ticket.title }} - {{ ticket.description }}
-                <a href="/tickets/{{ticket.id}}">View Details</a>
+                <a href="{{url_for('ticket_detail',ticket_id=ticket.id)}}">View Details</a>
             </li>
         {% endfor %}
     </ul>
