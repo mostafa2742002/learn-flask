@@ -24,8 +24,24 @@ def resolve_ticket(ticket_id):
     ticket = find_by_id(ticket_id)
 
     if ticket is None:
-        return None
+        return None, "Ticket not found"
 
-    ticket.resolve()
+    resolved = ticket.resolve()
 
-    return ticket
+    if not resolved:
+        return ticket, "Only in-progress tickets can be resolved"
+
+    return ticket, "Ticket resolved successfully"
+
+def start_progress_ticket(ticket_id):
+    ticket = find_by_id(ticket_id)
+
+    if ticket is None:
+        return None, "Ticket not found"
+
+    started = ticket.start_progress()
+
+    if not started:
+        return ticket, "Only open tickets can be moved to in progress"
+
+    return ticket, "Ticket moved to in progress"

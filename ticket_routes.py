@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from ticket_service import get_all_tickets, get_ticket_by_id, add_ticket, resolve_ticket
+from ticket_service import get_all_tickets, get_ticket_by_id, add_ticket, resolve_ticket, start_progress_ticket
 
 ticket_bp = Blueprint("tickets", __name__)
 
@@ -41,12 +41,23 @@ def create_ticket():
 
 @ticket_bp.route("/tickets/<int:ticket_id>/resolve", methods=["POST"])
 def resolve_ticket_route(ticket_id):
-    ticket = resolve_ticket(ticket_id)
+    ticket, message = resolve_ticket(ticket_id)
+
+    flash(message)
 
     if ticket is None:
-        flash("Ticket not found")
         return redirect(url_for("tickets.home"))
 
-    flash("Ticket resolved successfully")
+    return redirect(url_for("tickets.ticket_details", ticket_id=ticket_id))
+
+
+@ticket_bp.route("/tickets/<int:ticket_id>/start", methods=["POST"])
+def start_progress_ticket_route(ticket_id):
+    ticket, message = start_progress_ticket(ticket_id)
+
+    flash(message)
+
+    if ticket is None:
+        return redirect(url_for("tickets.home"))
 
     return redirect(url_for("tickets.ticket_details", ticket_id=ticket_id))

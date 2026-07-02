@@ -10,10 +10,16 @@
     <p>Status: {{ ticket.status.value }}</p>
     <p>Description: {{ ticket.description }}</p>
 
-    {% if ticket.status.value != "RESOLVED" %}
-    <form action="{{ url_for('tickets.resolve_ticket_route', ticket_id=ticket.id) }}" method="post">
-        <button type="submit">Resolve Ticket</button>
-    </form>
+    {% if ticket.status.value == "OPEN" %}
+        <form action="{{ url_for('tickets.start_progress_ticket_route', ticket_id=ticket.id) }}" method="post">
+            <button type="submit">Start Progress</button>
+        </form>
+    {% elif ticket.status.value == "IN_PROGRESS" %}
+        <form action="{{ url_for('tickets.resolve_ticket_route', ticket_id=ticket.id) }}" method="post">
+            <button type="submit">Resolve Ticket</button>
+        </form>
+    {% else %}
+        <p>This ticket is resolved.</p>
     {% endif %}
 
 {% else %}
