@@ -1,0 +1,39 @@
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from ticket_service import get_all_tickets, get_ticket_by_id, add_ticket
+
+ticket_bp = Blueprint("tickets", __name__)
+
+
+@ticket_bp.route("/")
+def home():
+    user_name = "Mostafa"
+    return render_template("home.html", name=user_name, tickets=get_all_tickets())
+
+
+@ticket_bp.route("/tickets/<int:ticket_id>")
+def ticket_details(ticket_id):
+    selected_ticket = get_ticket_by_id(ticket_id)
+    return render_template("ticket_details.html", ticket=selected_ticket)
+
+
+@ticket_bp.route("/tickets/new")
+def show_create_ticket_form():
+    return render_template("create_ticket.html")
+
+
+@ticket_bp.route("/tickets", methods=["POST"])
+def create_ticket():
+    title = request.form["title"]
+    description = request.form["description"]
+
+    if title.strip() == "":
+        return render_template("create_ticket.html", error="Title is required")
+
+    if description.strip() == "":
+        return render_template("create_ticket.html", error="Description is required")
+
+    add_ticket(title, description)
+
+    flash("Ticket created successfully")
+
+    return redirect(url_for("tickets.home"))

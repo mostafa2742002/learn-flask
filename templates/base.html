@@ -7,12 +7,20 @@
 <body>
 
     <nav>
-        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('tickets.home') }}">Home</a>
         |
-        <a href="{{ url_for('show_create_ticket_form') }}">Create Ticket</a>
+        <a href="{{ url_for('tickets.show_create_ticket_form') }}">Create Ticket</a>
     </nav>
 
     <hr>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
 
     {% block content %}
     {% endblock %}
