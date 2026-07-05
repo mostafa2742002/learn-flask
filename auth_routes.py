@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 
-from user_service import register_user
+from user_service import register_user, login_user
 
 
 auth_bp = Blueprint("auth", __name__)
@@ -24,4 +24,37 @@ def register_route():
     if user is None:
         return render_template("register.html")
 
+    return redirect(url_for("auth.login_form"))
+
+
+@auth_bp.route("/login")
+def login_form():
+    return render_template("login.html")
+
+
+@auth_bp.route("/login", methods=["POST"])
+def login_route():
+    email = request.form["email"]
+    password = request.form["password"]
+
+    user, message = login_user(email, password)
+
+    flash(message)
+
+    if user is None:
+        return render_template("login.html")
+
+    session["user_id"] = user.id
+    session["user_name"] = user.name
+    session["user_email"] = user.email
+
     return redirect(url_for("tickets.home"))
+
+
+@auth_bp.route("/logout")
+def logout_route():
+    session.clear()
+
+    flash("Logged out successfully")
+
+    return redirect(url_for("auth.login_form"))
