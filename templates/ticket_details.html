@@ -17,15 +17,24 @@
     </p>
 
     <form action="{{ url_for('tickets.delete_ticket_route', ticket_id=ticket.id) }}" method="post">
+        
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
         <button type="submit">Delete Ticket</button>
     </form>
 
     {% if ticket.status.value == "OPEN" %}
         <form action="{{ url_for('tickets.start_progress_ticket_route', ticket_id=ticket.id) }}" method="post">
+            
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
             <button type="submit">Start Progress</button>
         </form>
     {% elif ticket.status.value == "IN_PROGRESS" %}
         <form action="{{ url_for('tickets.resolve_ticket_route', ticket_id=ticket.id) }}" method="post">
+            
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
             <button type="submit">Resolve Ticket</button>
         </form>
     {% else %}

@@ -7,6 +7,9 @@
 <h1>Login</h1>
 
 <form action="{{ url_for('auth.login_route') }}" method="post">
+    
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
     <input type="email" name="email" placeholder="Email" value="{{ email or '' }}">
 
     <br><br>

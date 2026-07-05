@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-
+from auth_helpers import csrf_protect
 from user_service import register_user, login_user
 
 
@@ -12,6 +12,7 @@ def register_form():
 
 
 @auth_bp.route("/register", methods=["POST"])
+@csrf_protect
 def register_route():
     name = request.form["name"]
     email = request.form["email"]
@@ -33,6 +34,7 @@ def login_form():
 
 
 @auth_bp.route("/login", methods=["POST"])
+@csrf_protect
 def login_route():
     email = request.form["email"]
     password = request.form["password"]

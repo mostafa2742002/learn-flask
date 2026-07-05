@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, session, url_for, flash, abort
 from ticket_service import delete_ticket, get_all_tickets, get_filtered_tickets, get_ticket_by_id, add_ticket, resolve_ticket, search_tickets, start_progress_ticket, update_ticket,get_tickets_by_status
-from auth_helpers import login_required
+from auth_helpers import csrf_protect, login_required
 
 ticket_bp = Blueprint("tickets", __name__)
 
@@ -43,6 +43,7 @@ def show_create_ticket_form():
 
 
 @ticket_bp.route("/tickets", methods=["POST"])
+@csrf_protect
 @login_required
 def create_ticket():
     title = request.form["title"]
@@ -63,6 +64,7 @@ def create_ticket():
 
 @ticket_bp.route("/tickets/<int:ticket_id>/resolve", methods=["POST"])
 @login_required
+@csrf_protect
 def resolve_ticket_route(ticket_id):
     ticket, message = resolve_ticket(ticket_id)
 
@@ -76,6 +78,7 @@ def resolve_ticket_route(ticket_id):
 
 @ticket_bp.route("/tickets/<int:ticket_id>/start", methods=["POST"])
 @login_required
+@csrf_protect
 def start_progress_ticket_route(ticket_id):
     ticket, message = start_progress_ticket(ticket_id)
 
@@ -99,6 +102,7 @@ def edit_ticket_form(ticket_id):
 
 @ticket_bp.route("/tickets/<int:ticket_id>/edit", methods=["POST"])
 @login_required
+@csrf_protect
 def update_ticket_route(ticket_id):
     title = request.form["title"]
     description = request.form["description"]
@@ -118,6 +122,7 @@ def update_ticket_route(ticket_id):
 
 @ticket_bp.route("/tickets/<int:ticket_id>/delete", methods=["POST"])
 @login_required
+@csrf_protect
 def delete_ticket_route(ticket_id):
     message = delete_ticket(ticket_id)
 
