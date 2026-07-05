@@ -22,7 +22,7 @@ def register_route():
     flash(message)
 
     if user is None:
-        return render_template("register.html")
+        return render_template("register.html", name=name, email=email)
 
     return redirect(url_for("auth.login_form"))
 
@@ -42,7 +42,7 @@ def login_route():
     flash(message)
 
     if user is None:
-        return render_template("login.html")
+        return render_template("login.html", email=email)
 
     session["user_id"] = user.id
     session["user_name"] = user.name

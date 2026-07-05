@@ -49,10 +49,10 @@ def create_ticket():
     description = request.form["description"]
 
     if title.strip() == "":
-        return render_template("create_ticket.html", error="Title is required")
+        return render_template("create_ticket.html", error="Title is required", title=title, description=description)
 
     if description.strip() == "":
-        return render_template("create_ticket.html", error="Description is required")
+        return render_template("create_ticket.html", error="Description is required", title=title, description=description)
 
     add_ticket(title, description, session["user_id"])
 
