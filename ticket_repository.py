@@ -124,7 +124,7 @@ def search_by_keyword(keyword):
     return [row_to_ticket(row) for row in rows]
 
 
-def find_by_filters(status, keyword):
+def find_by_filters(status, keyword,limit=10, offset=0):
     connection = get_connection()
 
     sql = "SELECT * FROM tickets WHERE 1=1"
@@ -139,7 +139,9 @@ def find_by_filters(status, keyword):
         params.append(f"%{keyword}%")
         params.append(f"%{keyword}%")
 
-    sql += " ORDER BY id DESC"
+    sql += " ORDER BY id DESC LIMIT ? OFFSET ?"
+    params.append(limit)
+    params.append(offset)
 
     rows = connection.execute(sql, params).fetchall()
 

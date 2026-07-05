@@ -11,14 +11,18 @@ def home():
     status = request.args.get("status")
     q = request.args.get("q")
 
-    tickets = get_filtered_tickets(status, q)
+    page = request.args.get("page", 1, type=int)
+    page_size = 5
+
+    tickets = get_filtered_tickets(status, q, page, page_size)
 
     return render_template(
         "home.html",
         name=user_name,
         tickets=tickets,
         selected_status=status,
-        search_keyword=q
+        search_keyword=q,
+        page=page
     )
 
 @ticket_bp.route("/tickets/<int:ticket_id>")

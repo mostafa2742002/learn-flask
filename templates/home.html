@@ -35,6 +35,20 @@
 
 <h2>Tickets</h2>
 
+<div>
+    {% if page > 1 %}
+        <a href="{{ url_for('tickets.home', page=page-1, status=selected_status, q=search_keyword) }}">
+            Previous
+        </a>
+    {% endif %}
+
+    <span>Page {{ page }}</span>
+
+    <a href="{{ url_for('tickets.home', page=page+1, status=selected_status, q=search_keyword) }}">
+        Next
+    </a>
+</div>
+
 <ul>
     {% for ticket in tickets %}
         <li>

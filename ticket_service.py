@@ -93,7 +93,7 @@ def search_tickets(keyword):
     return search_by_keyword(keyword.strip())
 
 
-def get_filtered_tickets(status, keyword):
+def get_filtered_tickets(status, keyword, page, page_size):
     clean_status = None
     clean_keyword = None
 
@@ -103,7 +103,6 @@ def get_filtered_tickets(status, keyword):
     if keyword and keyword.strip() != "":
         clean_keyword = keyword.strip()
 
-    if clean_status is None and clean_keyword is None:
-        return find_all()
+    offset = (page - 1) * page_size
 
-    return find_by_filters(clean_status, clean_keyword)
+    return find_by_filters(clean_status, clean_keyword, page_size, offset)
