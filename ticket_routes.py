@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from ticket_service import delete_ticket, get_all_tickets, get_filtered_tickets, get_ticket_by_id, add_ticket, resolve_ticket, search_tickets, start_progress_ticket, update_ticket,get_tickets_by_status
 
 ticket_bp = Blueprint("tickets", __name__)
@@ -28,6 +28,10 @@ def home():
 @ticket_bp.route("/tickets/<int:ticket_id>")
 def ticket_details(ticket_id):
     selected_ticket = get_ticket_by_id(ticket_id)
+
+    if selected_ticket is None:
+        abort(404)
+
     return render_template("ticket_details.html", ticket=selected_ticket)
 
 

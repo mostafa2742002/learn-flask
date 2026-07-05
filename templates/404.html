@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Not Found{% endblock %}
+
+{% block content %}
+
+<h1>404 - Page Not Found</h1>
+
+<p>The page or ticket you requested does not exist.</p>
+
+<a href="{{ url_for('tickets.home') }}">Back to Home</a>
+
+{% endblock %}
