@@ -8,7 +8,7 @@ def login_required(route_function):
     @wraps(route_function)
     def wrapper(*args, **kwargs):
         if session.get("user_id") is None:
-            flash("Please login first")
+            flash("Please login first", "warning")
             return redirect(url_for("auth.login_form"))
 
         return route_function(*args, **kwargs)

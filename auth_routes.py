@@ -20,7 +20,7 @@ def register_route():
 
     user, message = register_user(name, email, password)
 
-    flash(message)
+    flash(message, "success" if user is not None else "danger")
 
     if user is None:
         return render_template("register.html", name=name, email=email)
@@ -41,7 +41,7 @@ def login_route():
 
     user, message = login_user(email, password)
 
-    flash(message)
+    flash(message, "success" if user is not None else "danger")
 
     if user is None:
         return render_template("login.html", email=email)
@@ -57,6 +57,6 @@ def login_route():
 def logout_route():
     session.clear()
 
-    flash("Logged out successfully")
+    flash("Logged out successfully", "success")
 
     return redirect(url_for("auth.login_form"))

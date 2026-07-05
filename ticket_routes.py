@@ -57,7 +57,7 @@ def create_ticket():
 
     add_ticket(title, description, session["user_id"])
 
-    flash("Ticket created successfully")
+    flash("Ticket created successfully", "success")
 
     return redirect(url_for("tickets.home"))
 
@@ -68,7 +68,7 @@ def create_ticket():
 def resolve_ticket_route(ticket_id):
     ticket, message = resolve_ticket(ticket_id)
 
-    flash(message)
+    flash(message, "success" if ticket is not None else "danger")
 
     if ticket is None:
         return redirect(url_for("tickets.home"))
@@ -82,7 +82,7 @@ def resolve_ticket_route(ticket_id):
 def start_progress_ticket_route(ticket_id):
     ticket, message = start_progress_ticket(ticket_id)
 
-    flash(message)
+    flash(message, "success" if ticket is not None else "danger")
 
     if ticket is None:
         return redirect(url_for("tickets.home"))
@@ -95,7 +95,7 @@ def edit_ticket_form(ticket_id):
     ticket = get_ticket_by_id(ticket_id)
 
     if ticket is None:
-        flash("Ticket not found")
+        flash("Ticket not found", "danger")
         return redirect(url_for("tickets.home"))
 
     return render_template("edit_ticket.html", ticket=ticket)
@@ -109,7 +109,7 @@ def update_ticket_route(ticket_id):
 
     ticket, message = update_ticket(ticket_id, title, description)
 
-    flash(message)
+    flash(message, "success" if ticket is not None else "danger")
 
     if ticket is None:
         return redirect(url_for("tickets.home"))
@@ -126,7 +126,7 @@ def update_ticket_route(ticket_id):
 def delete_ticket_route(ticket_id):
     message = delete_ticket(ticket_id)
 
-    flash(message)
+    flash(message, "success" if message == "Ticket deleted successfully" else "danger")
 
     return redirect(url_for("tickets.home"))
 

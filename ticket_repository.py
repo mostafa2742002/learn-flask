@@ -68,7 +68,7 @@ def update(ticket):
     connection.execute(
         """
         UPDATE tickets
-        SET title = ?, status = ?, description = ?
+        SET title = ?, status = ?, description = ?, user_id = ?
         WHERE id = ?
         """,
         (ticket.title, ticket.status.value, ticket.description, ticket.id, ticket.user_id)
