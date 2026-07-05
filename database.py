@@ -31,5 +31,16 @@ def init_database():
         )
     """)
 
+    columns = connection.execute("PRAGMA table_info(tickets)").fetchall()
+    column_names = [column["name"] for column in columns]
+
+    if "user_id" not in column_names:
+        connection.execute("ALTER TABLE tickets ADD COLUMN user_id INTEGER")
+
+    if "created_at" not in column_names:
+        connection.execute("ALTER TABLE tickets ADD COLUMN created_at TEXT")
+
+
+
     connection.commit()
     connection.close()

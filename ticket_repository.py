@@ -8,7 +8,9 @@ def row_to_ticket(row):
         id=row["id"],
         title=row["title"],
         status=TicketStatus(row["status"]),
-        description=row["description"]
+        description=row["description"],
+        user_id=row["user_id"],
+        created_at=row["created_at"]
     )
 
 
@@ -45,10 +47,10 @@ def save(ticket):
 
     cursor = connection.execute(
         """
-        INSERT INTO tickets (title, status, description)
-        VALUES (?, ?, ?)
+        INSERT INTO tickets (title, status, description, user_id, created_at)
+        VALUES (?, ?, ?, ?, ?)
         """,
-        (ticket.title, ticket.status.value, ticket.description)
+        (ticket.title, ticket.status.value, ticket.description, ticket.user_id, ticket.created_at)
     )
 
     connection.commit()
@@ -69,7 +71,7 @@ def update(ticket):
         SET title = ?, status = ?, description = ?
         WHERE id = ?
         """,
-        (ticket.title, ticket.status.value, ticket.description, ticket.id)
+        (ticket.title, ticket.status.value, ticket.description, ticket.id, ticket.user_id)
     )
 
     connection.commit()

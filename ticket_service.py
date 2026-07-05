@@ -1,6 +1,7 @@
 from ticket_model import Ticket
 from ticket_repository import find_all, find_by_filters, find_by_id, find_by_status, save, search_by_keyword, update, delete_by_id
 from ticket_status import TicketStatus
+from datetime import datetime
 
 def get_all_tickets():
     return find_all()
@@ -10,12 +11,15 @@ def get_ticket_by_id(ticket_id):
     return find_by_id(ticket_id)
 
 
-def add_ticket(title, description):
+def add_ticket(title, description, user_id):
     new_ticket = Ticket(
         id=None,
         title=title,
         status=TicketStatus.OPEN,
-        description=description
+        description=description,
+        user_id=user_id,
+        created_at=datetime.now().strftime("%Y-%m-%d %H:%M")
+
     )
 
     return save(new_ticket)

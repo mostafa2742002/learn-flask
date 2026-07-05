@@ -8,6 +8,7 @@
     <h1>{{ ticket.title }}</h1>
 
     <p>Status: {{ ticket.status.value }}</p>
+    <p>Created at: {{ ticket.created_at }}</p>
     <p>Description: {{ ticket.description }}</p>
     <p>
         <a href="{{ url_for('tickets.edit_ticket_form', ticket_id=ticket.id) }}">

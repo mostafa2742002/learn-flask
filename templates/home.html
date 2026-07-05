@@ -52,7 +52,7 @@
 <ul>
     {% for ticket in tickets %}
         <li>
-            #{{ ticket.id }} - {{ ticket.title }} - {{ ticket.status.value }}
+            #{{ ticket.id }} - {{ ticket.title }} - {{ ticket.status.value }} - {{ ticket.created_at }}
 
             <a href="{{ url_for('tickets.ticket_details', ticket_id=ticket.id) }}">View Details</a>
         </li>

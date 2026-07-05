@@ -8,6 +8,8 @@ class Ticket:
     title: str
     status: TicketStatus
     description: str
+    user_id: int = None
+    created_at: str = None
 
     def start_progress(self):
         if self.status != TicketStatus.OPEN:
